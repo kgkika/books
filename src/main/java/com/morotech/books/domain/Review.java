@@ -24,6 +24,9 @@ public class Review {
     @NotNull
     private String review;
 
+    public Review() {
+    }
+
     public Review(Integer bookId, Integer rating, String review) {
         this.bookId = bookId;
         this.rating = rating;

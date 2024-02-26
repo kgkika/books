@@ -1,8 +1,8 @@
 package com.morotech.books.service;
 
 import com.morotech.books.domain.Review;
+import com.morotech.books.payload.ReviewRequestPayload;
 import com.morotech.books.repository.ReviewRepository;
-import com.morotech.books.request.ReviewPayload;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
@@ -32,7 +32,7 @@ public class ReviewServiceTest {
     private ReviewRepository repository;
 
     @Mock
-    private ReviewPayload payload;
+    private ReviewRequestPayload payload;
 
     @Test
     public void testAddReviewSuccess() {

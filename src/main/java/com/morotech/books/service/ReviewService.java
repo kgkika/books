@@ -2,8 +2,8 @@ package com.morotech.books.service;
 
 import com.morotech.books.domain.Review;
 import com.morotech.books.repository.ReviewRepository;
-import com.morotech.books.request.ReviewPayload;
-import com.morotech.books.result.AddReviewResult;
+import com.morotech.books.payload.ReviewRequestPayload;
+import com.morotech.books.payload.AddReviewResultPayload;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class ReviewService {
         this.reviewRepository = reviewRepository;
     }
 
-    public ResponseEntity<AddReviewResult> addReview(ReviewPayload reviewPayload) {
+    public ResponseEntity<AddReviewResultPayload> addReview(ReviewRequestPayload reviewPayload) {
         Review review = new Review(reviewPayload.bookId(), reviewPayload.rating(), reviewPayload.review());
         try {
             reviewRepository.save(review);
@@ -37,9 +37,9 @@ public class ReviewService {
                                     v -> v.getPropertyPath().toString(),
                                     ConstraintViolation::getMessage
                             ));
-            return ResponseEntity.badRequest().body(new AddReviewResult(errorByProperty));
+            return ResponseEntity.badRequest().body(new AddReviewResultPayload(errorByProperty));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new AddReviewResult(new HashMap<>() {{
+            return ResponseEntity.badRequest().body(new AddReviewResultPayload(new HashMap<>() {{
                 put("description", e.getMessage());
             }}));
         }

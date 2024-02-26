@@ -21,6 +21,14 @@ public class ConverterUtils {
     }
 
     public List<Book> convertToList(LinkedHashMap<String, Object> hashMapResponse) {
+        return toBookStream(hashMapResponse).collect(Collectors.toList());
+    }
+
+    public Book convertToBook(LinkedHashMap<String, Object> hashMapResponse) {
+        return toBookStream(hashMapResponse).findFirst().orElse(null);
+    }
+
+    private Stream<Book> toBookStream(LinkedHashMap<String, Object> hashMapResponse) {
         return hashMapResponse.entrySet().stream()
                 .filter(e -> "results".equals(e.getKey()))
                 .flatMap(e -> {
@@ -29,8 +37,7 @@ public class ConverterUtils {
                         return listOfMap.stream().map(this::transform);
                     }
                     return Stream.empty();
-                })
-                .collect(Collectors.toList());
+                });
     }
 
     private Book transform(LinkedHashMap<String, Object> itemMap) {

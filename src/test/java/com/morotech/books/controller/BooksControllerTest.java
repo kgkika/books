@@ -2,8 +2,8 @@ package com.morotech.books.controller;
 
 import com.morotech.books.model.Author;
 import com.morotech.books.model.Book;
+import com.morotech.books.payload.BookResponsePayload;
 import com.morotech.books.service.BooksService;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,8 +12,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -58,7 +60,7 @@ public class BooksControllerTest {
     @Test
     public void testSearchBooksByTerm() {
         when(service.getBooksByTerm("di")).thenReturn(books);
-        assertEquals(controller.searchBooksByTerm("di").getBody().size(), 4);
+        assertEquals(Objects.requireNonNull(controller.searchBooksByTerm("di").getBody()).size(), 4);
     }
 
     @Test
@@ -67,5 +69,12 @@ public class BooksControllerTest {
         assertEquals(controller.searchBooksByTermPaged("di").getContent().size(), 4);
         assertEquals(controller.searchBooksByTermPaged("di").getPageable().getPageNumber(), 0);
         assertEquals(controller.searchBooksByTermPaged("di").getTotalPages(), 2);
+    }
+
+    @Test
+    public void testGetBookDetails() {
+        ResponseEntity<BookResponsePayload> responseEntity = ResponseEntity.ok(new BookResponsePayload(books.get(0), "4.5", List.of("Lorem Ipsum")));
+        when(service.getBookDetails("1400")).thenReturn(responseEntity);
+        assertEquals(Objects.requireNonNull(controller.getBooksDetails("1400").getBody()).getAvgRating(), "4.5");
     }
 }
