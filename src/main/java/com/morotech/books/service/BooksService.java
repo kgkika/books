@@ -26,12 +26,11 @@ public class BooksService {
     private static final String ENDPOINT = "/books";
     private static final String PARAM = "?search=";
 
+    private static final Logger LOGGER = LogManager.getLogger(BooksService.class);
+
     private final RestTemplate restTemplate;
 
     private final ConverterUtils converterUtils;
-
-    private static final Logger LOGGER = LogManager.getLogger(BooksService.class);
-
 
     @Autowired
     public BooksService(RestTemplate restTemplate, ConverterUtils converterUtils) {
