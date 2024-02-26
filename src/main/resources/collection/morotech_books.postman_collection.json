@@ -1,0 +1,111 @@
+{
+	"info": {
+		"_postman_id": "2b8aefe8-fbf6-4d10-af3a-1bebe8497186",
+		"name": "morotech_books",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3720408"
+	},
+	"item": [
+		{
+			"name": "search",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/books?term=di",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"books"
+					],
+					"query": [
+						{
+							"key": "term",
+							"value": "di"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "search paged",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/books/paged?term=di",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"books",
+						"paged"
+					],
+					"query": [
+						{
+							"key": "term",
+							"value": "di"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add review",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"bookId\": 1400,\r\n    \"rating\": 1,\r\n    \"review\": \"Lorem Ipsum Test review.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/reviews/addReview",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"reviews",
+						"addReview"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get book details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/books/details/1400",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"books",
+						"details",
+						"1400"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
