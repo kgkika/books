@@ -2,6 +2,7 @@ package com.morotech.books.controller;
 
 import com.morotech.books.model.Book;
 import com.morotech.books.payload.BookResponsePayload;
+import com.morotech.books.payload.MonthlyAvgRatingResponse;
 import com.morotech.books.service.BooksService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -47,6 +48,15 @@ public class BooksController {
     @GetMapping("/details/{bookId}")
     public ResponseEntity<BookResponsePayload> getBooksDetails(@PathVariable String bookId) {
         return service.getBookDetails(bookId);
+    }
+
+    /**
+     * @param bookId The book id
+     * @return Returns the book info as {@link BookResponsePayload}
+     */
+    @GetMapping("/monthlyAverage/{bookId}")
+    public ResponseEntity<List<MonthlyAvgRatingResponse>> getBookMonthlyAverage(@PathVariable String bookId) {
+        return service.getMonthlyAverageRating(bookId);
     }
 
 }

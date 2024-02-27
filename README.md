@@ -38,17 +38,29 @@ The following endpoints are available in this API:
 - **Request:** Path parameter `bookId` specifying the book identifier.
 - **Response:** JSON object containing details of the book, including authors, language, title, average rating, reviews, etc.
 
+### 5. GET /books/monthlyAverage/{bookId}
+- **Description:** Retrieve the average rating by month about the book.
+- **Request:** Path parameter `bookId` specifying the book identifier.
+- **Response:** JSON object containing the average rating per month of the book by each year.
+
 
 ## Technologies Used
 This project is built using the following technologies:
 - Java 17/Spring Boot 3.2.3, Spring Data JPA, Spring Web
 - Database: SQLite
 
-## Configuration
-This project requires the following configuration settings:
-- Environment variables:
-    - `PORT`: 8080
-    - `DATABASE_URL`: Sample database is located under `src/main/resources/sqlite/books.db`. If you need to use this sample database, make sure to change the path in property `spring.datasource.url` inside `application.properties`. 
+## Running the Project
+By default, the project will run on port `:8080`. You can access it through your web browser or API client at `http://localhost:8080`.
+
+## Database Configuration
+### Using the Provided Sample Database
+By default, the project comes with a sample SQLite database located at `src/main/resources/sqlite/books.db`. This sample database contains pre-populated data.
+
+### Using a New Database
+If you prefer to use a new database, Spring Boot can automatically create one during startup. The location and configuration of this database are managed through the application.properties file.
+
+### Configuring the Database Location
+You can specify the location of the database by modifying the spring.datasource.url property in the application.properties file. Simply update the value of this property with the desired path where you want the database file to be created
 
 ## Authors
 - Katerina Gkika - Software Engineer

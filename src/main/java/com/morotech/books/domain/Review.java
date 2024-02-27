@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "review")
 public class Review {
@@ -23,6 +25,14 @@ public class Review {
 
     @NotNull
     private String review;
+
+    @Column(name = "created", columnDefinition = "TIMESTAMP")
+    private LocalDateTime created;
+
+    @PrePersist
+    protected void onCreate() {
+        created = LocalDateTime.now();
+    }
 
     public Review() {
     }
@@ -55,5 +65,9 @@ public class Review {
 
     public void setReview(String review) {
         this.review = review;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
     }
 }

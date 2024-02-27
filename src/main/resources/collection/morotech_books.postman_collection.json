@@ -64,7 +64,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"bookId\": 1400,\r\n    \"rating\": 1,\r\n    \"review\": \"Lorem Ipsum Test review.\"\r\n}",
+					"raw": "{\r\n    \"bookId\": 1400,\r\n    \"rating\": 1,\r\n    \"review\": \"Lorem Ipsum Testeeeeeeeeee.\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -101,6 +101,27 @@
 					"path": [
 						"books",
 						"details",
+						"1400"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get book average rating by month",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/books/monthlyAverage/1400",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"books",
+						"monthlyAverage",
 						"1400"
 					]
 				}

@@ -3,6 +3,7 @@ package com.morotech.books.service;
 import com.morotech.books.domain.Review;
 import com.morotech.books.model.Book;
 import com.morotech.books.payload.BookResponsePayload;
+import com.morotech.books.payload.MonthlyAvgRatingResponse;
 import com.morotech.books.repository.ReviewRepository;
 import com.morotech.books.utils.ConverterUtils;
 import org.apache.logging.log4j.LogManager;
@@ -21,10 +22,12 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.time.Month;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.averagingInt;
+import static java.util.stream.Collectors.groupingBy;
 
 @Service
 public class BooksService {
@@ -69,7 +72,6 @@ public class BooksService {
         return Collections.emptyList();
     }
 
-    @Cacheable(value = "booksTerm")
     public Page<Book> getBooksByTermPaged(String term) {
         List<Book> books = getBooksByTerm(term);
         return new PageImpl<>(books, PageRequest.of(0, 3), books.size());
@@ -95,7 +97,7 @@ public class BooksService {
                     return ResponseEntity.ok(
                             new BookResponsePayload(
                                     book,
-                                    calculateAverage(reviews),
+                                    calculateListAverage(reviews),
                                     reviews.stream().map(Review::getReview).collect(Collectors.toList()))
                     );
                 }
@@ -108,6 +110,30 @@ public class BooksService {
         return ResponseEntity.noContent().build();
     }
 
+    public ResponseEntity<List<MonthlyAvgRatingResponse>> getMonthlyAverageRating(String bookId) {
+        try {
+            List<Review> reviews = reviewRepository.findAllByBookId(Integer.valueOf(bookId));
+            Map<Integer, List<Review>> reviewsPerYear = reviews.stream().collect(
+                    groupingBy(s -> s.getCreated().getYear())
+            );
+            List<MonthlyAvgRatingResponse> averagePerMonth = reviewsPerYear.entrySet().stream()
+                    .map(e -> {
+                        Integer year = e.getKey();
+                        List<Review> reviewsPerYearList = e.getValue();
+                        Map<Month, Double> avgMap = reviewsPerYearList.stream()
+                                .collect(groupingBy(s -> s.getCreated().getMonth(), averagingInt(Review::getRating)));
+                        Map<Integer, Map<Month, Double>> reviewsToReturn = new HashMap<>();
+                        reviewsToReturn.put(year, avgMap);
+                        return new MonthlyAvgRatingResponse(reviewsToReturn);
+                    })
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(averagePerMonth);
+        } catch (Exception e) {
+            LOGGER.error("Error during getting monthly average rating for book with id {}. Error: {}", bookId, e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     private String getSearchUrl() {
         return HOST + ENDPOINT + SEARCH_PARAM;
     }
@@ -116,8 +142,14 @@ public class BooksService {
         return HOST + ENDPOINT + IDS_PARAM;
     }
 
-    private String calculateAverage(List<Review> reviews) {
-        double average = reviews.stream().mapToInt(Review::getRating).average().orElse(0);
+    // TODO export in separate service
+    private String calculateListAverage(List<Review> reviews) {
+        double averageDouble = reviews.stream().mapToInt(Review::getRating).average().orElse(0);
+        return averageToString(averageDouble);
+    }
+
+    // TODO export in separate service
+    private String averageToString(double average) {
         return (new BigDecimal(average)).setScale(1, RoundingMode.HALF_UP).toString();
     }
 }
